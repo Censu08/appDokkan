@@ -1,18 +1,15 @@
-import pickle
-from pathlib import Path
-
 import streamlit_authenticator as stauth
 import streamlit as st
 
-names = ["simone"]
-username = ["censu"]
+import database as db
 
+users = db.fetch_all_users()
 
-file_path = Path(__file__).parent / 'hashed_pw.pkl'
-with file_path.open("rb") as file:
-    hashed_password = pickle.load(file)
+usernames = [user["key"] for user in users]
+names = [user["name"] for user in users]
+hashed_passwords = [user["password"] for user in users]
 
-authenticator = stauth.Authenticate(names, username, hashed_password, "app_dokkan", "cookie_key_impossible")
+authenticator = stauth.Authenticate(names, usernames, hashed_passwords, "app_dokkan", "cookie_key_impossible")
 
 name, authentication_status, username = authenticator.login("Login", "main")
 
