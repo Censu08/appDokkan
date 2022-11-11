@@ -20,4 +20,4 @@ if authentication_status == None:
     st.warning("Please enter a valid username/password")
 
 if authentication_status:
-    st.success("Valid!")
+    st.write("Valid!")
