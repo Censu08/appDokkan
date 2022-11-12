@@ -4,7 +4,7 @@ from deta import Deta
 from dotenv import load_dotenv
 
 load_dotenv(".env")
-DETA_KEY = os.getenv("DETA_KEY")
+DETA_KEY = os.getenv("DETA_KEY_USER")
 
 #Deta object
 deta = Deta(DETA_KEY)
@@ -12,11 +12,11 @@ deta = Deta(DETA_KEY)
 #Create connection
 db = deta.Base("dokkan_users")
 
-def insert_user(username, name, password):
+def insert_user(user: dict):
     return db.put({
-        "key": username,
-        "name": name,
-        "password": password
+        "key": user["username"],
+        "name": user["name"],
+        "password": user["password"]
     })
 
 def fetch_all_users():
