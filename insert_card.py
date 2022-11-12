@@ -3,9 +3,8 @@ from streamlit_option_menu import option_menu
 
 import database_card as db
 
-
 def insert():
-    with st.form(key="card_insert_form"):
+    with st.form(key="card_insert_form", clear_on_submit = True):
         st.title('Insert a card')
         name = st.text_input(label="Enter card name")
         title = st.text_input(label="Enter card title")
@@ -43,7 +42,6 @@ def insert():
             score = 0.75
 
         if submitted:
-
             try: 
                 new_card = {
                     "title": title,

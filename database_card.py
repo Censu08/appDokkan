@@ -37,4 +37,4 @@ def update_card(title, updates):
     return db.update(updates, username)
 
 def delete_card(title):
-    return db.delete(username)
+    return db.delete(title)
