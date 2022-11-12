@@ -17,7 +17,7 @@ def insert():
         side = st.selectbox('Choose the side picked by the character', possible_sides)
         type_card = st.selectbox('Choose the type of the character', possible_types)
         banner = st.selectbox('Choose the banner type of the card', possible_banners)
-        rarity = st.selectbox('Choose the point of the card', possible_rarity)
+        rarity = st.selectbox('Choose the rarity of the card', possible_rarity)
         
         submitted = st.form_submit_button("Insert")
 

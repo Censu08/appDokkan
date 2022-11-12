@@ -20,6 +20,8 @@ def visualize():
             st.header(item["name"])
             st.markdown("Tipology: " + item["side"] + " " + item["type_card"])
             st.markdown("Rarity: " + item["rarity"] + " " + item["banner"])
+            score = item["score"] 
+            st.markdown(f"Score of the card: {score}")
 
         col1, col2 = st.columns((8,1))
 
