@@ -3,7 +3,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 
 import database_user as db
-
+import main_page as mp
 
 # ---------- NAVIGATION MENU -----------------
 selected = option_menu(
@@ -34,7 +34,7 @@ if selected == "Login":
         st.warning("Please enter a valid username/password")
 
     if authentication_status:
-        st.write("Valid!")
+        st.success("Muni bello")
 
 
 
