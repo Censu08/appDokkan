@@ -14,7 +14,6 @@ selected = option_menu(
 
 
 
-
 if selected == "Login":
 
     users = db.fetch_all_users()
@@ -27,15 +26,14 @@ if selected == "Login":
 
     name, authentication_status, username = authenticator.login("Login", "main")
 
-    if authentication_status == False:
-        st.error("Username or password is incorrect")
-
-    if authentication_status == None:
-        st.warning("Please enter a valid username/password")
-
     if authentication_status:
-        st.success("Muni bello")
-
+        authenticator.logout('Logout', 'main')
+        st.write(f'Welcome *{name}*')
+        st.title('Some content')
+    elif authentication_status == False:
+        st.error('Username/password is incorrect')
+    elif authentication_status == None:
+        st.warning('Please enter your username and password')
 
 
 if selected == "Register":
