@@ -3,7 +3,6 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 
 import database_user as db
-import main_page as mp
 
 # ---------- NAVIGATION MENU -----------------
 selected = option_menu(
@@ -11,7 +10,6 @@ selected = option_menu(
         options = ["Login", "Register"],
         icons = ["door-open", "book"], #icons.getbootstrap.com
         orientation = "horizontal")
-
 
 
 if selected == "Login":
