@@ -20,10 +20,11 @@ user_collection = mongo_db["dokkan_users"]
 def insert_user(user: dict):
     return user_collection.insert_one(user)
 
-def retrieve_user(email: str, password: str):
+def retrieve_user(email: str):
+    
     user_to_find = {
-        "email": email,
-        "password": password
+        "email": email
     }
+
     user = user_collection.find_one(user_to_find)
     return user

@@ -1,7 +1,8 @@
-import streamlit_authenticator as stauth
 import streamlit as st
 from streamlit_option_menu import option_menu
+import streamlit_authenticator as stauth
 import re
+import bcrypt 
 
 import databases.database_user as db
 
@@ -21,8 +22,7 @@ if selected == "Login":
 
         st.title('Enter the community')
         email = st.text_input(label="Email")
-        password = st.text_input(label="Password", type='password')
-
+        password = st.text_input(label="Password", type='password').encode("utf-8")
         submitted = st.form_submit_button("Login")
 
         if submitted:
@@ -30,10 +30,9 @@ if selected == "Login":
                 st.warning("Please provide a correct email")
 
             else:
-                user = db.retrieve_user(email, password)
-
-                if user == None:
-                    st.warning("Emai/Password incorrect")
+                user = db.retrieve_user(email)
+                if (user == None or bcrypt.checkpw(password, user["password"]) == False):
+                    st.warning("Email/Password is incorrect")
 
                 else:
                     st.success("Found")
@@ -51,7 +50,7 @@ if selected == "Register":
         name = st.text_input(label="Name")
         surname = st.text_input(label="Surname")
         email = st.text_input(label="Email")
-        password = st.text_input(label="Password", type='password')
+        password = st.text_input(label="Password", type='password').encode("utf-8")
         score = 0
         account_type = 'Basic'
 
@@ -62,21 +61,19 @@ if selected == "Register":
                 st.warning("Please provide a correct email")
 
             else:
+                
+                hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
+
                 new_user = {
                     "email": email,
                     "username": username,
                     "name": name,
                     "surname": surname,
-                    "password": password,
+                    "password": hashed_password,
                     "score": score,
                     "account_type": account_type 
                 }
 
                 db.insert_user(new_user)
-    #new_user = {
-    #    "username": "ciao",
-    #    "name": "come",
-    #    "password": "va"
-    #}
-    #db.insert_user(new_user)
+    
     
