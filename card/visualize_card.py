@@ -26,7 +26,7 @@ def visualize():
         col1, col2 = st.columns((8,1))
 
         with col1:
-            st.text("ciao")
+            add_button = st.button('Add to collection', key= item["key"] + "_key_add")
 
         with col2:
             delete_button = st.button('Delete', key= item["key"] + "_key_delete")
