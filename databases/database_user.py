@@ -1,36 +1,29 @@
-import os
+from pymongo import MongoClient
+import streamlit as st
 
-from deta import Deta
+import os
 from dotenv import load_dotenv
 
-load_dotenv(".env")
-DETA_KEY = os.getenv("DETA_KEY_USER")
+load_dotenv()
+CLIENT = os.getenv('CLIENT_MONGO')
 
-#Deta object
-deta = Deta(DETA_KEY)
+@st.experimental_singleton(suppress_st_warning=True)
+def init_connection():
+    st.header(CLIENT)
+    return MongoClient(CLIENT)
 
-#Create connection
-db = deta.Base("dokkan_users")
+mongo_client = init_connection()
+mongo_db = mongo_client["dokkan_application"]
+user_collection = mongo_db["dokkan_users"]
+
 
 def insert_user(user: dict):
-    return db.put({
-        "key": user["username"],
-        "name": user["name"],
-        "password": user["password"]
-    })
+    return user_collection.insert_one(user)
 
-def fetch_all_users():
-    #returns a list of JSON obj
-    res = db.fetch()
-    return res.items
-
-def get_user(username):
-    #return only the info for that username
-    return db.get(username)
-
-def update_user(username, updates):
-    #updates is a dict with all the changes
-    return db.update(updates, username)
-
-def delete_user(username):
-    return db.delete(username)
+def retrieve_user(email: str, password: str):
+    user_to_find = {
+        "email": email,
+        "password": password
+    }
+    user = user_collection.find_one(user_to_find)
+    return user

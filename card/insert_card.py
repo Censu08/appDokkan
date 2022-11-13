@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 
-import database_card as db
+import databases.database_card as db
 
 def insert():
     with st.form(key="card_insert_form", clear_on_submit = True):
