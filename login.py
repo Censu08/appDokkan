@@ -16,6 +16,11 @@ selected = option_menu(
 
 
 if selected == "Login":
+
+    if "logged_in" not in st.session_state:
+        st.session_state["logged_in"] = False
+        st.session_state["user"] = ""
+
     with st.form(key="user_login_form"):
 
         email_regexp = re.compile(r"[^@]+@[^@]+\.[^@]+")
@@ -35,13 +40,16 @@ if selected == "Login":
                     st.warning("Email/Password is incorrect")
 
                 else:
+                    st.session_state["logged_in"] = True
+                    st.session_state["email"] = email
+                    st.session_state["username"] = user["username"]
                     st.success("Found")
 
                 
 
 if selected == "Register":
 
-    with st.form(key="user_registration_form"):
+    with st.form(key="user_registration_form", clear_on_submit = True):
 
         email_regexp = re.compile(r"[^@]+@[^@]+\.[^@]+")
 
@@ -75,5 +83,5 @@ if selected == "Register":
                 }
 
                 db.insert_user(new_user)
-    
+                st.success("User correctly registered! Log in and enjoy!")
     

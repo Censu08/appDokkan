@@ -9,7 +9,6 @@ CLIENT = os.getenv('CLIENT_MONGO')
 
 @st.experimental_singleton(suppress_st_warning=True)
 def init_connection():
-    st.header(CLIENT)
     return MongoClient(CLIENT)
 
 mongo_client = init_connection()
