@@ -5,10 +5,8 @@ from streamlit_option_menu import option_menu
 import component.card.insert_card as ic
 import component.card.visualize_card as vc
 
-
-
 # -------- SETTINGS -----------
-page_title = "Welcome to Card Section " + st.session_state["username"]
+page_title = "Welcome to Card Section " + st.session_state["user_username"]
 page_icon = ":flower_playing_cards:" # emoji in webfx
 # -----------------------------
 
@@ -19,7 +17,7 @@ def app_main():
     # ---------- NAVIGATION MENU -----------------
     selected = option_menu(
             menu_title = None, 
-            options = ["Add Card", "All Cards", "My Cards"],
+            options = ["Add Card", "All Cards", "My Section"],
             icons = ["plus-circle-fill", "view-list", "card-heading"], #icons.getbootstrap.com
             orientation = "horizontal")
 
@@ -29,11 +27,8 @@ def app_main():
     if selected == "All Cards":
         vc.visualize()
 
-    if selected == "My Cards":
-        vc.visualize_user_card()
+    if selected == "My Section":
+        vc.visualize_user_card(st.session_state["user_email"])
 
-if st.session_state["logged_in"] == True:
-    app_main()
 
-else:
-    st.write("Log in to enjoy the experience")
+app_main()

@@ -19,13 +19,13 @@ user_card_collection = mongo_db["dokkan_user_cards"]
 def insert_card_user(user_card: dict):
     return user_card_collection.insert_one(user_card)
 
-def retrieve_all_cards():
-    cards_list = user_card_collection.find({"utente": st.session_state["email"]})
+def retrieve_all_cards(email: str()):
+    cards_list = user_card_collection.find({"utente": email})
 
     return list(cards_list)
 
-def retrieve_one_card(title: str):
-    return list(user_card_collection.find({"title": title}))
+def retrieve_one_card(email: str, title: str):
+    return list(user_card_collection.find({"utente": email, "title": title}))
 
-def delete_card(title: str):
-    return user_card_collection.delete_one({ "title": title })
+def delete_card(email: str, title: str):
+    return user_card_collection.delete_one({"utente": email, "title": title})

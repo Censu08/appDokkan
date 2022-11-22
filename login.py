@@ -5,6 +5,7 @@ import re
 import bcrypt 
 
 import databases.database_user as db
+import pages.app as app
 
 
 # ---------- NAVIGATION MENU -----------------
@@ -14,12 +15,7 @@ selected = option_menu(
         icons = ["door-open", "book"], #icons.getbootstrap.com
         orientation = "horizontal")
 
-
 if selected == "Login":
-
-    if "logged_in" not in st.session_state:
-        st.session_state["logged_in"] = False
-        st.session_state["user"] = ""
 
     with st.form(key="user_login_form"):
 
@@ -40,10 +36,10 @@ if selected == "Login":
                     st.warning("Email/Password is incorrect")
 
                 else:
-                    st.session_state["logged_in"] = True
-                    st.session_state["email"] = email
-                    st.session_state["username"] = user["username"]
-                    st.success("Found")
+                    if 'user_email' not in st.session_state:
+                        st.session_state["user_email"] = email
+                        st.session_state["user_username"] = db.retrieve_user(email)["username"]
+                    st.success("User Found")
 
                 
 
