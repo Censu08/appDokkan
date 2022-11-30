@@ -42,7 +42,7 @@ def visualize():
 
         if add_button:
                 if len(db_c_u.retrieve_one_card(st.session_state["user_email"], item["title"])) == 0:
-
+                    
                     # TODO: inserimento punteggio in base all'ability
                     user_card = {
                         "utente": st.session_state["user_email"],
