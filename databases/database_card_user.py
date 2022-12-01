@@ -29,3 +29,6 @@ def retrieve_one_card(email: str, title: str):
 
 def delete_card(email: str, title: str):
     return user_card_collection.delete_one({"utente": email, "title": title})
+
+def update_card_user(title: str, final_score: float):
+    return user_card_collection.update_one({"title": title}, {"$set": {"final_score": final_score}})

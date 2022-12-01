@@ -14,6 +14,15 @@ def callback_choose_open():
 def callback_choose_close():
     st.session_state.button_clicked_choose = False
 
+if "button_clicked_upgrade" not in st.session_state:
+    st.session_state.button_clicked_upgrade = False
+
+def callback_upgrade_open():
+    st.session_state.button_clicked_upgrade = True
+
+def callback_upgrade_close():
+    st.session_state.button_clicked_upgrade = False
+
 def visualize():
     st.title("List of all cards")
 
@@ -51,9 +60,8 @@ def visualize():
         if st.session_state.button_clicked_choose:
                 if len(db_c_u.retrieve_one_card(st.session_state["user_email"], item["title"])) == 0:
                     
-                    # TODO: inserimento punteggio in base all'ability
                     ability = st.number_input('Insert the ability', key= item["title"] + "key_input_ability", min_value=0, max_value=4)
-                    ability_button = st.button('Add to collection', key= item["title"] + "key_add_ability", on_click=callback_choose_close)
+                    ability_button = st.button('Add to collection', key= item["title"] + "key_add_ability")
                     if ability_button:
                         final_score = (ability * 0.5 + 1) * item["score"]
                         if ability == 4:
@@ -62,12 +70,14 @@ def visualize():
                             "utente": st.session_state["user_email"],
                             "title": item["title"],
                             "name": item["name"],
-                            "score": final_score,
+                            "score": item["score"],
+                            "final_score": final_score,
                             "rarity": item["rarity"],
                             "banner": item["banner"]
                         }
                         db_c_u.insert_card_user(user_card)
-                    st.success("Card successfully inserted! Check -My Cards- section")
+                        callback_choose_close()
+                        st.success("Card successfully inserted! Check -My Cards- section")
                 else:
                     st.warning("Card aready inserted!")
         "---"
@@ -82,12 +92,11 @@ def visualize_user_card(user_email: str):
 
     if len(all_cards_df) > 0:
         all_cards_df.drop(['_id', 'utente'], axis=1, inplace=True)
-        # TODO: calcolo del punteggio in base alle ability
-        score = str(all_cards_df["score"].sum())
+        final_score = str(all_cards_df["final_score"].sum())
 
     container_1 = st.container()
     with container_1:
-        container_1.title("You total points are: " + score)
+        container_1.title("You total points are: " + final_score)
 
         container_col_expander = st.expander("See summary table")
         with container_col_expander:
@@ -111,7 +120,7 @@ def visualize_user_card(user_email: str):
                 col1, col2 = st.columns((7.5,1))
 
                 with col1:
-                    upgrade_button = st.button('Upgrade', key= item["title"] + "_key_upgrade")
+                    upgrade_button = st.button('Upgrade', key= item["title"] + "_key_upgrade", on_click=callback_upgrade_open)
 
                 with col2:
                     delete_button = st.button('Delete', key= item["title"] + "_key_delete")
@@ -122,6 +131,25 @@ def visualize_user_card(user_email: str):
                     db_c_u.delete_card(st.session_state["user_email"], item["title"])
                     st.success("Card Deleted")
 
-                if upgrade_button:
+                if st.session_state.button_clicked_upgrade:
                     st.write("Upgrade Card")
+
+                    ability = st.number_input('Insert the ability', key= item["title"] + "key_input_ability", min_value=0, max_value=4)
+                    ability_button = st.button('Upgrade card', key= item["title"] + "key_add_ability")
+                    if ability_button:
+                        final_score = (ability * 0.5 + 1) * item["score"]
+                        if ability == 4:
+                            final_score = final_score + 0.5 * item["score"]
+                        user_card = {
+                            "utente": st.session_state["user_email"],
+                            "title": item["title"],
+                            "name": item["name"],
+                            "score": final_score,
+                            "rarity": item["rarity"],
+                            "banner": item["banner"]
+                        }
+                        db_c_u.update_card_user(item["title"], final_score)
+                        callback_upgrade_close()
+
+                        st.success("Card successfully upgraded")
                 "---"
