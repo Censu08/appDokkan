@@ -5,6 +5,14 @@ import pandas as pd
 import databases.database_card as db_c
 import databases.database_card_user as db_c_u
 
+if "button_clicked_choose" not in st.session_state:
+    st.session_state.button_clicked_choose = False
+
+def callback_choose_open():
+    st.session_state.button_clicked_choose = True
+
+def callback_choose_close():
+    st.session_state.button_clicked_choose = False
 
 def visualize():
     st.title("List of all cards")
@@ -28,7 +36,7 @@ def visualize():
         col1, col2 = st.columns((8,1))
 
         with col1:
-            add_button = st.button('Add to collection', key= item["title"] + "_key_add")
+            add_button = st.button('Choose card', key= item["title"] + "_key_add",  on_click=callback_choose_open)
 
         with col2:
             delete_button = st.button('Delete', key= item["title"] + "_key_delete")
@@ -40,21 +48,26 @@ def visualize():
                 db_c.delete_card(title_card)
                 st.success('Card successfully deleted!')
 
-        if add_button:
+        if st.session_state.button_clicked_choose:
                 if len(db_c_u.retrieve_one_card(st.session_state["user_email"], item["title"])) == 0:
                     
                     # TODO: inserimento punteggio in base all'ability
-                    user_card = {
-                        "utente": st.session_state["user_email"],
-                        "title": item["title"],
-                        "name": item["name"],
-                        "score": item["score"],
-                        "rarity": item["rarity"],
-                        "banner": item["banner"]
-                    }
-                    db_c_u.insert_card_user(user_card)
+                    ability = st.number_input('Insert the ability', key= item["title"] + "key_input_ability", min_value=0, max_value=4)
+                    ability_button = st.button('Add to collection', key= item["title"] + "key_add_ability", on_click=callback_choose_close)
+                    if ability_button:
+                        final_score = (ability * 0.5 + 1) * item["score"]
+                        if ability == 4:
+                            final_score = final_score + 0.5 * item["score"]
+                        user_card = {
+                            "utente": st.session_state["user_email"],
+                            "title": item["title"],
+                            "name": item["name"],
+                            "score": final_score,
+                            "rarity": item["rarity"],
+                            "banner": item["banner"]
+                        }
+                        db_c_u.insert_card_user(user_card)
                     st.success("Card successfully inserted! Check -My Cards- section")
-
                 else:
                     st.warning("Card aready inserted!")
         "---"
