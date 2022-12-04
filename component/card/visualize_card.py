@@ -88,7 +88,7 @@ def visualize_user_card(user_email: str):
     all_cards = db_c_u.retrieve_all_cards(user_email)
     all_cards_df = pd.DataFrame(all_cards)
 
-    score = "0"
+    final_score = "0"
 
     if len(all_cards_df) > 0:
         all_cards_df.drop(['_id', 'utente'], axis=1, inplace=True)

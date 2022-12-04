@@ -12,7 +12,7 @@ def insert():
         possible_sides= ('Super', 'Extreme')
         possible_types= ('PHY', 'STR', 'INT', 'TEQ', 'AGL')
         possible_banners= ('DokkanFest', 'Legendary', 'Carnival')
-        possible_rarity= ('LR', 'tUr' , 'Rare')
+        possible_rarity= ('tUr' , 'Rare', 'LR')
 
         side = st.selectbox('Choose the side picked by the character', possible_sides)
         type_card = st.selectbox('Choose the type of the character', possible_types)
@@ -22,6 +22,7 @@ def insert():
         submitted = st.form_submit_button("Insert")
 
         if rarity == 'LR':
+            
             if banner == 'DokkanFest':
                 score = 2
 
@@ -46,6 +47,7 @@ def insert():
                 new_card = {
                     "title": title,
                     "name": name,
+                    "super_attack": super_attack,
                     "side": side,
                     "type_card": type_card,
                     "banner": banner,
